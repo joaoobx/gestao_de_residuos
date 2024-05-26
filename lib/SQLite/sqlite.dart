@@ -50,10 +50,10 @@ class DatabaseHelper {
   }
 
   //Update Notes
-  Future<int> updateNote(title, content, noteId) async {
+  Future<int> updateNote(type, location, weight, noteId) async {
     final Database db = await initDB();
     return db.rawUpdate(
-        'update notes set noteTitle = ?, noteContent = ? where noteId = ?',
-        [title, content, noteId]);
+        'update notes set type = ?, location = ?, weight = ? where noteId = ?',
+        [type, location, weight, noteId]);
   }
 }

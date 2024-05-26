@@ -153,6 +153,7 @@ class _NotesState extends State<Notes> {
                                                     .updateNote(
                                                         title.text,
                                                         content.text,
+                                                        2,
                                                         items[index].noteId)
                                                     .whenComplete(() {
                                                   //After update, note will refresh

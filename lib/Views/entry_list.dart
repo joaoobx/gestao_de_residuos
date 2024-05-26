@@ -184,8 +184,21 @@ class _EntryListState extends State<EntryList> {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => const EditEntry()))
-                                                .then((value) {
+                                                    builder: (context) =>
+                                                        EditEntry(
+                                                            editEntryId: items[
+                                                                    index]
+                                                                .noteId,
+                                                            editLocation:
+                                                                items[index]
+                                                                    .location,
+                                                            editType:
+                                                                items[index]
+                                                                    .type,
+                                                            editWeight: items[
+                                                                    index]
+                                                                .weight))).then(
+                                                (value) {
                                               if (value) {
                                                 //This will be called
                                                 _refresh();

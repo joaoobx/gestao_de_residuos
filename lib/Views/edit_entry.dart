@@ -1,11 +1,14 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 
 class EditEntry extends StatefulWidget {
-  const EditEntry({super.key});
+  final int? editEntryId;
+  final String editType;
+  final String editLocation;
+  final String editWeight;
+  const EditEntry({super.key, required this.editEntryId, required this.editType, required this.editLocation, required this.editWeight});
 
   @override
   State<EditEntry> createState() => _EditEntryState();
@@ -18,6 +21,7 @@ class _EditEntryState extends State<EditEntry> {
   final formKey = GlobalKey<FormState>();
 
   final db = DatabaseHelper();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +51,7 @@ class _EditEntryState extends State<EditEntry> {
                   width: 98,
                 ),
                 const Padding(padding: EdgeInsets.all(20.0)),
-                const Text("Nova Entrada", style: TextStyle(fontSize: 24)),
+                const Text("Edição de Entrada", style: TextStyle(fontSize: 24)),
                 Form(
                   //I forgot to specify key
                     key: formKey,
@@ -59,21 +63,21 @@ class _EditEntryState extends State<EditEntry> {
                             controller: type,
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return "Deve-se informar um tipo";
+                                return "Deve-se inform um tipo";
                               }
                               return null;
                             },
-                            decoration: const InputDecoration(
-                              label: Text("Classe"),
-                              labelStyle: TextStyle(color: Colors.black),
+                            decoration: InputDecoration(
+                              label: Text(widget.editType),
+                              labelStyle: const TextStyle(color: Colors.black),
                               fillColor: Colors.black,
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              enabledBorder: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
                             ),
@@ -87,17 +91,17 @@ class _EditEntryState extends State<EditEntry> {
                               }
                               return null;
                             },
-                            decoration: const InputDecoration(
-                              label: Text("Localização"),
+                            decoration: InputDecoration(
+                              label: Text(widget.editLocation),
                               labelStyle: TextStyle(color: Colors.black),
                               fillColor: Colors.black,
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              enabledBorder: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
                             ),
@@ -115,17 +119,17 @@ class _EditEntryState extends State<EditEntry> {
                               }
                               return null;
                             },
-                            decoration: const InputDecoration(
-                              label: Text("Peso"),
+                            decoration: InputDecoration(
+                              label: Text(widget.editWeight),
                               labelStyle: TextStyle(color: Colors.black),
                               fillColor: Colors.black,
-                              border: OutlineInputBorder(
+                              border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              enabledBorder: OutlineInputBorder(
+                              enabledBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
-                              focusedBorder: OutlineInputBorder(
+                              focusedBorder: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
                               ),
                             ),
@@ -133,7 +137,7 @@ class _EditEntryState extends State<EditEntry> {
                           const Padding(padding: EdgeInsets.all(30.0)),
                           SizedBox(
                             height: 41,
-                            width: 360,
+                            width: 380,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
@@ -146,11 +150,10 @@ class _EditEntryState extends State<EditEntry> {
                                 //We should not allow empty data to the database
                                 if (formKey.currentState!.validate()) {
                                   db
-                                      .createNote(NoteModel(
-                                      type: type.text,
-                                      location: location.text,
-                                      weight: weight.text,
-                                      createdAt: DateTime.now().toIso8601String()))
+                                      .updateNote(type.text,
+                                      location.text,
+                                      weight.text,
+                                      widget.editEntryId)
                                       .whenComplete(() {
                                     //When this value is true
                                     Navigator.of(context).pop(true);
@@ -158,7 +161,7 @@ class _EditEntryState extends State<EditEntry> {
                                 }
                               },
                               child: const Text(
-                                "Cadastrar entrada",
+                                "Editar",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 1),
