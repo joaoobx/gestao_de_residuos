@@ -6,6 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
+import 'package:gerenciamento_de_residuos/JsonModels/exit_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 import 'package:gerenciamento_de_residuos/Views/entry_list.dart';
 import 'package:gerenciamento_de_residuos/Views/exit_list.dart';
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late DatabaseHelper handler;
   late Future<double> entrySum;
+  late Future<double> exitSum;
   final db = DatabaseHelper();
 
   final title = TextEditingController();
@@ -30,10 +32,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     handler = DatabaseHelper();
     entrySum = handler.getEntryWeightSum();
+    exitSum = handler.getExitWeightSum();
 
     handler.initDB().whenComplete(() {
       entrySum = getEntrySum();
     });
+
+    handler.initDB().whenComplete(() {
+      exitSum = getExitSum();
+    });
+
     super.initState();
   }
 
@@ -41,10 +49,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return handler.getEntryWeightSum();
   }
 
+  Future<double> getExitSum() {
+    return handler.getExitWeightSum();
+  }
+
   //Refresh method
   Future<void> _refresh() async {
     setState(() {
       entrySum = getEntrySum();
+      exitSum = getExitSum();
     });
   }
 
@@ -128,13 +141,35 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)),
                           backgroundColor:
-                              const Color.fromRGBO(69, 161, 134, 1)),
-                      onPressed: () => {},
-                      child: const Text(
-                        "Listagem de Saidas",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Color.fromRGBO(0, 0, 0, 1)),
-                      ),
+                          const Color.fromRGBO(69, 161, 134, 1)),
+                      onPressed: () {},
+                      child: FutureBuilder<double>(
+                          future: exitSum,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<double> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            } else {
+                              final items = snapshot.data ?? <ExitModel>[];
+                              return Column(
+                                children: [
+                                  const Padding(padding: EdgeInsets.all(11.0)),
+                                  const Text("Saida",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color.fromRGBO(0, 0, 0, 0.6))),
+                                  Text("$items Kg",
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          color: Color.fromRGBO(0, 0, 0, 0.6),
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              );
+                            }
+                          }),
                     ),
                   ),
                 ],

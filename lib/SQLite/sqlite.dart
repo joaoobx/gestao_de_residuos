@@ -78,7 +78,7 @@ class DatabaseHelper {
   Future<double> getExitWeightSum() async {
     final Database db = await initDB();
     List<Map<String, Object?>> result = await db.query('exits');
-    var array = result.map((e) => EntryModel.fromMap(e)).toList();
+    var array = result.map((e) => ExitModel.fromMap(e)).toList();
     double sum = array.fold(0.0, (sum, item) => sum + item.weight);
     return sum;
   }
