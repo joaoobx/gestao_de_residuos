@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 import 'package:gerenciamento_de_residuos/Views/create_note.dart';
@@ -248,6 +249,37 @@ class _EntryListState extends State<EntryList> {
                     },
                   ),
                 ),
+                SizedBox(
+                  height: 41,
+                  width: 360,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(90)),
+                        backgroundColor: const Color.fromRGBO(69, 161, 134, 1),
+                        padding: const EdgeInsets.all(0.0)),
+                    onPressed: () {
+                      //We need call refresh method after a new note is created
+                      //Now it works properly
+                      //We will do delete now
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => const CreateNote()))
+                          .then((value) {
+                        if (value) {
+                          //This will be called
+                          _refresh();
+                        }
+                      });
+                    },
+                    child: const Text(
+                      "Cadastrar entrada",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Color.fromRGBO(0, 0, 0, 1), fontSize: 12),
+                    ),
+                  ),
+                ),
+                const Padding(padding: EdgeInsets.all(20.0))
               ],
             )));
   }
