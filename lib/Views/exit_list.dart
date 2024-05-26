@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/exit_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
-import 'package:gerenciamento_de_residuos/Views/create_entry.dart';
 import 'package:gerenciamento_de_residuos/Views/create_exit.dart';
-import 'package:gerenciamento_de_residuos/Views/edit_entry.dart';
 import 'package:gerenciamento_de_residuos/Views/edit_exit.dart';
 import 'package:intl/intl.dart';
 
@@ -88,7 +85,7 @@ class _ExitListState extends State<ExitList> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-                        return const Center(child: Text("No data"));
+                        return const Center(child: Text("Não há saidas cadastradas"));
                       } else if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       } else {

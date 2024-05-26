@@ -87,7 +87,7 @@ class _EntryListState extends State<EntryList> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-                        return const Center(child: Text("No data"));
+                        return const Center(child: Text("Não há entradas cadastradas"));
                       } else if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       } else {
