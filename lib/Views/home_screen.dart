@@ -8,6 +8,7 @@ import 'package:flutter/widgets.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 import 'package:gerenciamento_de_residuos/Views/entry_list.dart';
+import 'package:gerenciamento_de_residuos/Views/exit_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -175,7 +176,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               borderRadius: BorderRadius.circular(5)),
                           backgroundColor:
                               const Color.fromRGBO(69, 161, 134, 1)),
-                      onPressed: () => {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ExitList()),
+                        ).then((_) => {_refresh()});
+                      },
                       child: const Text(
                         "Listagem de Saidas",
                         textAlign: TextAlign.center,

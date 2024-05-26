@@ -28,7 +28,7 @@ class ExitModel {
         type: json["type"],
         location: json["location"],
         weight: json["weight"],
-        supplier: json["weight"],
+        supplier: json["supplier"],
         mtr: json["mtr"],
         cdf: json["cdf"],
         revenue: json["revenue"],

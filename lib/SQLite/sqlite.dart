@@ -1,4 +1,5 @@
 import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
+import 'package:gerenciamento_de_residuos/JsonModels/exit_model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -15,6 +16,7 @@ class DatabaseHelper {
 
     return openDatabase(path, version: 1, onCreate: (db, version) async {
       await db.execute(entriesTable);
+      await db.execute(exitsTable);
     });
   }
   
@@ -24,9 +26,9 @@ class DatabaseHelper {
     return db.insert('entries', entry.toMap());
   }
 
-  Future<int> createExit(EntryModel note) async {
+  Future<int> createExit(ExitModel exit) async {
     final Database db = await initDB();
-    return db.insert('exits', note.toMap());
+    return db.insert('exits', exit.toMap());
   }
 
   Future<List<EntryModel>> getEntries() async {
@@ -35,10 +37,10 @@ class DatabaseHelper {
     return result.map((e) => EntryModel.fromMap(e)).toList();
   }
 
-  Future<List<EntryModel>> getExits() async {
+  Future<List<ExitModel>> getExits() async {
     final Database db = await initDB();
     List<Map<String, Object?>> result = await db.query('exits');
-    return result.map((e) => EntryModel.fromMap(e)).toList();
+    return result.map((e) => ExitModel.fromMap(e)).toList();
   }
 
   Future<int> deleteEntry(int id) async {

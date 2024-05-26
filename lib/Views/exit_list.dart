@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
+import 'package:gerenciamento_de_residuos/JsonModels/exit_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 import 'package:gerenciamento_de_residuos/Views/create_entry.dart';
+import 'package:gerenciamento_de_residuos/Views/create_exit.dart';
 import 'package:gerenciamento_de_residuos/Views/edit_entry.dart';
 import 'package:intl/intl.dart';
 
-class EntryList extends StatefulWidget {
-  const EntryList({super.key});
+class ExitList extends StatefulWidget {
+  const ExitList({super.key});
 
   @override
-  State<EntryList> createState() => _EntryListState();
+  State<ExitList> createState() => _ExitListState();
 }
 
-class _EntryListState extends State<EntryList> {
+class _ExitListState extends State<ExitList> {
   late DatabaseHelper handler;
-  late Future<List<EntryModel>> notes;
+  late Future<List<ExitModel>> exits;
   final db = DatabaseHelper();
 
   final title = TextEditingController();
@@ -26,22 +28,22 @@ class _EntryListState extends State<EntryList> {
   @override
   void initState() {
     handler = DatabaseHelper();
-    notes = handler.getEntries();
+    exits = handler.getExits();
 
     handler.initDB().whenComplete(() {
-      notes = getAllNotes();
+      exits = getAllExits();
     });
     super.initState();
   }
 
-  Future<List<EntryModel>> getAllNotes() {
-    return handler.getEntries();
+  Future<List<ExitModel>> getAllExits() {
+    return handler.getExits();
   }
 
   //Refresh method
   Future<void> _refresh() async {
     setState(() {
-      notes = getAllNotes();
+      exits = getAllExits();
     });
   }
 
@@ -77,13 +79,13 @@ class _EntryListState extends State<EntryList> {
               children: [
                 const Padding(padding: EdgeInsets.all(40.0)),
                 //Search Field here
-                const Text("Entrada de Resíduos",
+                const Text("Saida de Resíduos",
                     style: TextStyle(fontSize: 24)),
                 Expanded(
-                  child: FutureBuilder<List<EntryModel>>(
-                    future: notes,
+                  child: FutureBuilder<List<ExitModel>>(
+                    future: exits,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<EntryModel>> snapshot) {
+                        AsyncSnapshot<List<ExitModel>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -91,14 +93,14 @@ class _EntryListState extends State<EntryList> {
                       } else if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       } else {
-                        final items = snapshot.data ?? <EntryModel>[];
+                        final items = snapshot.data ?? <ExitModel>[];
                         return ListView.builder(
                             itemCount: items.length,
                             itemBuilder: (context, index) {
                               return ListTile(
                                 leading: SizedBox(
-                                  height: 42,
-                                  width: 164,
+                                  height: 53,
+                                  width: 213,
                                   child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.fromLTRB(
@@ -118,14 +120,24 @@ class _EntryListState extends State<EntryList> {
                                               items[index].type,
                                               style: const TextStyle(
                                                   color: Color.fromRGBO(
-                                                      0, 0, 0, 1)),
+                                                      0, 0, 0, 1),
+                                              fontSize: 10),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              items[index].supplier,
+                                              style: const TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 1),
+                                                  fontSize: 10),
                                             ),
                                             const Spacer(),
                                             Text(
                                               "${items[index].weight} Kg",
                                               style: const TextStyle(
                                                   color: Color.fromRGBO(
-                                                      0, 0, 0, 1)),
+                                                      0, 0, 0, 1),
+                                              fontSize: 10),
                                             ),
                                           ],
                                         ),
@@ -143,12 +155,48 @@ class _EntryListState extends State<EntryList> {
                                             ),
                                             const Spacer(),
                                             Text(
+                                              "R\$ ${items[index].revenue}",
+                                              style: const TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      2, 27, 251, 1),
+                                                  fontSize: 10),
+                                            ),
+                                            const Spacer(),
+                                            Text(
                                               items[index].location,
                                               style: const TextStyle(
                                                   color: Color.fromRGBO(
                                                       0, 0, 0, 0.6),
                                                   fontSize: 10),
-                                            )
+                                            ),
+                                          ],
+                                        ),
+                                        const Spacer(),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              items[index].cdf,
+                                              style: const TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 0.6),
+                                                  fontSize: 10),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              "R\$ ${items[index].cost}",
+                                              style: const TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      251, 2, 2, 1),
+                                                  fontSize: 10),
+                                            ),
+                                            const Spacer(),
+                                            Text(
+                                              items[index].mtr,
+                                              style: const TextStyle(
+                                                  color: Color.fromRGBO(
+                                                      0, 0, 0, 0.6),
+                                                  fontSize: 10),
+                                            ),
                                           ],
                                         )
                                       ],
@@ -159,12 +207,16 @@ class _EntryListState extends State<EntryList> {
                                   width: 164,
                                   child: Row(
                                     children: [
+                                      const Padding(
+                                          padding: EdgeInsets.all(20.0)),
                                       SizedBox(
-                                        height: 42,
-                                        width: 82,
+                                        height: 41,
+                                        width: 60,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                               shape: RoundedRectangleBorder(
+                                                  side: const BorderSide(color: Color.fromRGBO(
+                                                      0, 0, 0, 0.6)),
                                                   borderRadius:
                                                       BorderRadius.circular(5)),
                                               backgroundColor:
@@ -183,7 +235,7 @@ class _EntryListState extends State<EntryList> {
                                                         EditEntry(
                                                             editEntryId: items[
                                                                     index]
-                                                                .entryId,
+                                                                .exitId,
                                                             editLocation:
                                                                 items[index]
                                                                     .location,
@@ -213,11 +265,13 @@ class _EntryListState extends State<EntryList> {
                                       const Padding(
                                           padding: EdgeInsets.all(1.0)),
                                       SizedBox(
-                                        height: 42,
-                                        width: 80,
+                                        height: 41,
+                                        width: 60,
                                         child: ElevatedButton(
                                           style: ElevatedButton.styleFrom(
                                               shape: RoundedRectangleBorder(
+                                                  side: const BorderSide(color: Color.fromRGBO(
+                                                      0, 0, 0, 0.6)),
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                               ),
@@ -230,7 +284,7 @@ class _EntryListState extends State<EntryList> {
                                             //We call the delete method in database helper
                                             db
                                                 .deleteEntry(
-                                                    items[index].entryId!)
+                                                    items[index].exitId!)
                                                 .whenComplete(() {
                                               //After success delete , refresh notes
                                               //Done, next step is update notes
@@ -272,7 +326,7 @@ class _EntryListState extends State<EntryList> {
                       Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const CreateEntry()))
+                                  builder: (context) => const CreateExit()))
                           .then((value) {
                         if (value) {
                           //This will be called
@@ -281,7 +335,7 @@ class _EntryListState extends State<EntryList> {
                       });
                     },
                     child: const Text(
-                      "Cadastrar entrada",
+                      "Cadastrar saida",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           color: Color.fromRGBO(0, 0, 0, 1), fontSize: 12),

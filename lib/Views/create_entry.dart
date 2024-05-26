@@ -158,7 +158,7 @@ class _CreateEntryState extends State<CreateEntry> {
                                 }
                               },
                               child: const Text(
-                                "Cadastrar entrada",
+                                "Cadastrar",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Color.fromRGBO(0, 0, 0, 1),
