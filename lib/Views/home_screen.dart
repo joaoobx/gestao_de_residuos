@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
+import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 import 'package:gerenciamento_de_residuos/Views/entry_list.dart';
 
@@ -99,9 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             } else if (snapshot.hasError) {
                               return Text(snapshot.error.toString());
                             } else {
-                              final items = snapshot.data ?? <NoteModel>[];
+                              final items = snapshot.data ?? <EntryModel>[];
                               return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const Padding(padding: EdgeInsets.all(11.0)),
                                   const Text("Entrada",

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
+import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 
 class CreateEntry extends StatefulWidget {
@@ -146,7 +146,7 @@ class _CreateEntryState extends State<CreateEntry> {
                                 //We should not allow empty data to the database
                                 if (formKey.currentState!.validate()) {
                                   db
-                                      .createNote(NoteModel(
+                                      .createEntry(EntryModel(
                                       type: type.text,
                                       location: location.text,
                                       weight: double.parse(weight.text),

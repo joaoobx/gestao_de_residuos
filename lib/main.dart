@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gerenciamento_de_residuos/Views/home_screen.dart';
-import 'package:gerenciamento_de_residuos/Views/notes.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(

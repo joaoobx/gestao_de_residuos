@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
+import 'package:gerenciamento_de_residuos/JsonModels/entry_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
 import 'package:gerenciamento_de_residuos/Views/create_entry.dart';
 import 'package:gerenciamento_de_residuos/Views/edit_entry.dart';
@@ -15,7 +15,7 @@ class EntryList extends StatefulWidget {
 
 class _EntryListState extends State<EntryList> {
   late DatabaseHelper handler;
-  late Future<List<NoteModel>> notes;
+  late Future<List<EntryModel>> notes;
   final db = DatabaseHelper();
 
   final title = TextEditingController();
@@ -26,7 +26,7 @@ class _EntryListState extends State<EntryList> {
   @override
   void initState() {
     handler = DatabaseHelper();
-    notes = handler.getNotes();
+    notes = handler.getEntries();
 
     handler.initDB().whenComplete(() {
       notes = getAllNotes();
@@ -34,14 +34,8 @@ class _EntryListState extends State<EntryList> {
     super.initState();
   }
 
-  Future<List<NoteModel>> getAllNotes() {
-    return handler.getNotes();
-  }
-
-  //Search method here
-  //First we have to create a method in Database helper class
-  Future<List<NoteModel>> searchNote() {
-    return handler.searchNotes(keyword.text);
+  Future<List<EntryModel>> getAllNotes() {
+    return handler.getEntries();
   }
 
   //Refresh method
@@ -86,10 +80,10 @@ class _EntryListState extends State<EntryList> {
                 const Text("Entrada de Resíduos",
                     style: TextStyle(fontSize: 24)),
                 Expanded(
-                  child: FutureBuilder<List<NoteModel>>(
+                  child: FutureBuilder<List<EntryModel>>(
                     future: notes,
                     builder: (BuildContext context,
-                        AsyncSnapshot<List<NoteModel>> snapshot) {
+                        AsyncSnapshot<List<EntryModel>> snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const CircularProgressIndicator();
                       } else if (snapshot.hasData && snapshot.data!.isEmpty) {
@@ -97,7 +91,7 @@ class _EntryListState extends State<EntryList> {
                       } else if (snapshot.hasError) {
                         return Text(snapshot.error.toString());
                       } else {
-                        final items = snapshot.data ?? <NoteModel>[];
+                        final items = snapshot.data ?? <EntryModel>[];
                         return ListView.builder(
                             itemCount: items.length,
                             itemBuilder: (context, index) {
@@ -188,7 +182,7 @@ class _EntryListState extends State<EntryList> {
                                                         EditEntry(
                                                             editEntryId: items[
                                                                     index]
-                                                                .noteId,
+                                                                .entryId,
                                                             editLocation:
                                                                 items[index]
                                                                     .location,
@@ -234,8 +228,8 @@ class _EntryListState extends State<EntryList> {
                                           onPressed: () {
                                             //We call the delete method in database helper
                                             db
-                                                .deleteNote(
-                                                    items[index].noteId!)
+                                                .deleteEntry(
+                                                    items[index].entryId!)
                                                 .whenComplete(() {
                                               //After success delete , refresh notes
                                               //Done, next step is update notes

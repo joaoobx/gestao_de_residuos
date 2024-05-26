@@ -1,20 +1,20 @@
-class NoteModel {
-  final int? noteId;
+class EntryModel {
+  final int? entryId;
   final String type;
   final String location;
   final double weight;
   final String createdAt;
 
-  NoteModel({
-    this.noteId,
+  EntryModel({
+    this.entryId,
     required this.type,
     required this.location,
     required this.weight,
     required this.createdAt,
   });
 
-  factory NoteModel.fromMap(Map<String, dynamic> json) => NoteModel(
-        noteId: json["noteId"],
+  factory EntryModel.fromMap(Map<String, dynamic> json) => EntryModel(
+        entryId: json["entryId"],
         type: json["type"],
         location: json["location"],
         weight: json["weight"],
@@ -22,7 +22,7 @@ class NoteModel {
       );
 
   Map<String, dynamic> toMap() => {
-        "noteId": noteId,
+        "entryId": entryId,
         "type": type,
         "location": location,
         "weight": weight,

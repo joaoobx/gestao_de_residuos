@@ -150,7 +150,7 @@ class _EditEntryState extends State<EditEntry> {
                                 //We should not allow empty data to the database
                                 if (formKey.currentState!.validate()) {
                                   db
-                                      .updateNote(type.text,
+                                      .updateEntry(type.text,
                                       location.text,
                                       weight.text,
                                       widget.editEntryId)
