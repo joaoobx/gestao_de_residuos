@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
-import 'package:intl/intl.dart';
+import 'package:gerenciamento_de_residuos/Views/entry_list.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -51,157 +54,116 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
+      body: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color.fromRGBO(36, 56, 57, 1),
-                  Color.fromRGBO(60, 104, 105, 1),
-                  Color.fromRGBO(127, 106, 89, 1),
-                ],
-              )
-          ),
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color.fromRGBO(36, 56, 57, 1),
+              Color.fromRGBO(60, 104, 105, 1),
+              Color.fromRGBO(127, 106, 89, 1),
+            ],
+          )),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              //Search Field here
+              const Padding(padding: EdgeInsets.all(38.0)),
+              const Image(
+                image: AssetImage('lib/assets/leaves.png'),
+                width: 98,
+              ),
+              const Text("Gestão de Resíduos", style: TextStyle(fontSize: 24)),
+              const Padding(padding: EdgeInsets.all(50.0)),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                margin: const EdgeInsets.symmetric(horizontal: 10),
                 decoration: BoxDecoration(
                     color: Colors.grey.withOpacity(.2),
                     borderRadius: BorderRadius.circular(8)),
-                child: TextFormField(
-                  controller: keyword,
-                  onChanged: (value) {
-                    //When we type something in textfield
-                    if (value.isNotEmpty) {
-                      setState(() {
-                        notes = searchNote();
-                      });
-                    } else {
-                      setState(() {
-                        notes = getAllNotes();
-                      });
-                    }
-                  },
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      icon: Icon(Icons.search),
-                      hintText: "Search"),
-                ),
               ),
-              Expanded(
-                child: FutureBuilder<List<NoteModel>>(
-                  future: notes,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<List<NoteModel>> snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-                      return const Center(child: Text("No data"));
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error.toString());
-                    } else {
-                      final items = snapshot.data ?? <NoteModel>[];
-                      return ListView.builder(
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              subtitle: Text(DateFormat("yMd").format(
-                                  DateTime.parse(items[index].createdAt))),
-                              title: Text(items[index].noteTitle),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  //We call the delete method in database helper
-                                  db
-                                      .deleteNote(items[index].noteId!)
-                                      .whenComplete(() {
-                                    //After success delete , refresh notes
-                                    //Done, next step is update notes
-                                    _refresh();
-                                  });
-                                },
-                              ),
-                              onTap: () {
-                                //When we click on note
-                                setState(() {
-                                  title.text = items[index].noteTitle;
-                                  content.text = items[index].noteContent;
-                                });
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        actions: [
-                                          Row(
-                                            children: [
-                                              TextButton(
-                                                onPressed: () {
-                                                  //Now update method
-                                                  db
-                                                      .updateNote(
-                                                      title.text,
-                                                      content.text,
-                                                      items[index].noteId)
-                                                      .whenComplete(() {
-                                                    //After update, note will refresh
-                                                    _refresh();
-                                                    Navigator.pop(context);
-                                                  });
-                                                },
-                                                child: const Text("Update"),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.pop(context);
-                                                },
-                                                child: const Text("Cancel"),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                        title: const Text("Update note"),
-                                        content: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              //We need two textfield
-                                              TextFormField(
-                                                controller: title,
-                                                validator: (value) {
-                                                  if (value!.isEmpty) {
-                                                    return "Title is required";
-                                                  }
-                                                  return null;
-                                                },
-                                                decoration: const InputDecoration(
-                                                  label: Text("Title"),
-                                                ),
-                                              ),
-                                              TextFormField(
-                                                controller: content,
-                                                validator: (value) {
-                                                  if (value!.isEmpty) {
-                                                    return "Content is required";
-                                                  }
-                                                  return null;
-                                                },
-                                                decoration: const InputDecoration(
-                                                  label: Text("Content"),
-                                                ),
-                                              ),
-                                            ]),
-                                      );
-                                    });
-                              },
-                            );
-                          });
-                    }
-                  },
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 82,
+                    width: 136,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          backgroundColor:
+                              const Color.fromRGBO(69, 161, 134, 1)),
+                      onPressed: () {},
+                      child: const Text(
+                        "Listagem de Entradas",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color.fromRGBO(0, 0, 0, 1)),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(16.0)),
+                  SizedBox(
+                    height: 82,
+                    width: 136,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          backgroundColor:
+                          const Color.fromRGBO(69, 161, 134, 1)),
+                      onPressed: () => {},
+                      child: const Text(
+                        "Listagem de Saidas",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color.fromRGBO(0, 0, 0, 1)),
+                      ),
+                    ),
+                  ),
+                ],
               ),
+              const Padding(padding: EdgeInsets.all(100.0)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 82,
+                    width: 136,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          backgroundColor:
+                          const Color.fromRGBO(69, 161, 134, 1)),
+                      onPressed: () {Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const EntryList()),
+                      );},
+                      child: const Text(
+                        "Listagem de Entradas",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color.fromRGBO(0, 0, 0, 1)),
+                      ),
+                    ),
+                  ),
+                  const Padding(padding: EdgeInsets.all(16.0)),
+                  SizedBox(
+                    height: 82,
+                    width: 136,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5)),
+                          backgroundColor:
+                          const Color.fromRGBO(69, 161, 134, 1)),
+                      onPressed: () => {},
+                      child: const Text(
+                        "Listagem de Saidas",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Color.fromRGBO(0, 0, 0, 1)),
+                      ),
+                    ),
+                  ),
+                ],
+              )
             ],
           )),
     );

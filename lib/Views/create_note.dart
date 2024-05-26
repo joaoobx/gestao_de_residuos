@@ -12,6 +12,7 @@ class CreateNote extends StatefulWidget {
 
 class _CreateNoteState extends State<CreateNote> {
   final title = TextEditingController();
+  final weight = TextEditingController();
   final content = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
@@ -29,8 +30,9 @@ class _CreateNoteState extends State<CreateNote> {
                 if (formKey.currentState!.validate()) {
                   db
                       .createNote(NoteModel(
-                          noteTitle: title.text,
-                          noteContent: content.text,
+                          type: title.text,
+                          location: content.text,
+                          weight: weight.text,
                           createdAt: DateTime.now().toIso8601String()))
                       .whenComplete(() {
                     //When this value is true
@@ -70,6 +72,18 @@ class _CreateNoteState extends State<CreateNote> {
                   },
                   decoration: const InputDecoration(
                     label: Text("Content"),
+                  ),
+                ),
+                TextFormField(
+                  controller: weight,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Weight is required";
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    label: Text("Weight"),
                   ),
                 ),
               ],

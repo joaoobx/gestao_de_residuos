@@ -1,27 +1,31 @@
 class NoteModel {
   final int? noteId;
-  final String noteTitle;
-  final String noteContent;
+  final String type;
+  final String location;
+  final String weight;
   final String createdAt;
 
   NoteModel({
     this.noteId,
-    required this.noteTitle,
-    required this.noteContent,
+    required this.type,
+    required this.location,
+    required this.weight,
     required this.createdAt,
   });
 
   factory NoteModel.fromMap(Map<String, dynamic> json) => NoteModel(
         noteId: json["noteId"],
-        noteTitle: json["noteTitle"],
-        noteContent: json["noteContent"],
+        type: json["type"],
+        location: json["location"],
+        weight: json["weight"],
         createdAt: json["createdAt"],
       );
 
   Map<String, dynamic> toMap() => {
         "noteId": noteId,
-        "noteTitle": noteTitle,
-        "noteContent": noteContent,
+        "type": type,
+        "location": location,
+        "weight": weight,
         "createdAt": createdAt,
       };
 }

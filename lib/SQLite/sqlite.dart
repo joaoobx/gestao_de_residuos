@@ -5,12 +5,9 @@ import 'package:sqflite/sqflite.dart';
 class DatabaseHelper {
   final databaseName = "notes.db";
   String noteTable =
-      "CREATE TABLE notes (noteId INTEGER PRIMARY KEY AUTOINCREMENT, noteTitle TEXT NOT NULL, noteContent TEXT NOT NULL, createdAt TEXT DEFAULT CURRENT_TIMESTAMP)";
+      "CREATE TABLE notes (noteId INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, location TEXT NOT NULL, weight TEXT NOT NULL, createdAt TEXT DEFAULT CURRENT_TIMESTAMP)";
 
   //Now we must create our user table into our sqlite db
-
-  String users =
-      "create table users (usrId INTEGER PRIMARY KEY AUTOINCREMENT, usrName TEXT UNIQUE, usrPassword TEXT)";
 
   //We are done in this section
 
@@ -19,7 +16,6 @@ class DatabaseHelper {
     final path = join(databasePath, databaseName);
 
     return openDatabase(path, version: 1, onCreate: (db, version) async {
-      await db.execute(users);
       await db.execute(noteTable);
     });
   }

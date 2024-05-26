@@ -119,7 +119,7 @@ class _NotesState extends State<Notes> {
                           return ListTile(
                             subtitle: Text(DateFormat("yMd").format(
                                 DateTime.parse(items[index].createdAt))),
-                            title: Text(items[index].noteTitle),
+                            title: Text(items[index].type),
                             trailing: IconButton(
                               icon: const Icon(Icons.delete),
                               onPressed: () {
@@ -136,8 +136,8 @@ class _NotesState extends State<Notes> {
                             onTap: () {
                               //When we click on note
                               setState(() {
-                                title.text = items[index].noteTitle;
-                                content.text = items[index].noteContent;
+                                title.text = items[index].type;
+                                content.text = items[index].location;
                               });
                               showDialog(
                                   context: context,
