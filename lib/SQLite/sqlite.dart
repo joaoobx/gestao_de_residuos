@@ -63,7 +63,7 @@ class DatabaseHelper {
   Future<int> updateExit(type, location, weight, supplier, mtr, cdf, revenue, cost, noteId) async {
     final Database db = await initDB();
     return db.rawUpdate(
-        'update entries set type = ?, location = ?, weight = ?, supplier = ?, mtr = ?, cdf = ?, revenue = ?, cost = ?, where exitId = ?',
+        'update exits set type = ?, location = ?, weight = ?, supplier = ?, mtr = ?, cdf = ?, revenue = ?, cost = ? where exitId = ?',
         [type, location, weight, supplier, mtr, cdf, revenue, cost, noteId]);
   }
 
