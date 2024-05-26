@@ -7,7 +7,7 @@ class EditEntry extends StatefulWidget {
   final int? editEntryId;
   final String editType;
   final String editLocation;
-  final String editWeight;
+  final double editWeight;
   const EditEntry({super.key, required this.editEntryId, required this.editType, required this.editLocation, required this.editWeight});
 
   @override
@@ -93,7 +93,7 @@ class _EditEntryState extends State<EditEntry> {
                             },
                             decoration: InputDecoration(
                               label: Text(widget.editLocation),
-                              labelStyle: TextStyle(color: Colors.black),
+                              labelStyle: const TextStyle(color: Colors.black),
                               fillColor: Colors.black,
                               border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),
@@ -120,8 +120,8 @@ class _EditEntryState extends State<EditEntry> {
                               return null;
                             },
                             decoration: InputDecoration(
-                              label: Text(widget.editWeight),
-                              labelStyle: TextStyle(color: Colors.black),
+                              label: Text(widget.editWeight.toString()),
+                              labelStyle: const TextStyle(color: Colors.black),
                               fillColor: Colors.black,
                               border: const OutlineInputBorder(
                                 borderSide: BorderSide(color: Colors.black),

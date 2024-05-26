@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -16,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late DatabaseHelper handler;
-  late Future<List<NoteModel>> notes;
+  late Future<double> entrySum;
   final db = DatabaseHelper();
 
   final title = TextEditingController();
@@ -26,28 +28,22 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     handler = DatabaseHelper();
-    notes = handler.getNotes();
+    entrySum = handler.getEntryWeightSum();
 
     handler.initDB().whenComplete(() {
-      notes = getAllNotes();
+      entrySum = getEntrySum();
     });
     super.initState();
   }
 
-  Future<List<NoteModel>> getAllNotes() {
-    return handler.getNotes();
-  }
-
-  //Search method here
-  //First we have to create a method in Database helper class
-  Future<List<NoteModel>> searchNote() {
-    return handler.searchNotes(keyword.text);
+  Future<double> getEntrySum() {
+    return handler.getEntryWeightSum();
   }
 
   //Refresh method
   Future<void> _refresh() async {
     setState(() {
-      notes = getAllNotes();
+      entrySum = getEntrySum();
     });
   }
 
@@ -93,11 +89,34 @@ class _HomeScreenState extends State<HomeScreen> {
                           backgroundColor:
                               const Color.fromRGBO(69, 161, 134, 1)),
                       onPressed: () {},
-                      child: const Text(
-                        "Listagem de Entradas",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: Color.fromRGBO(0, 0, 0, 1)),
-                      ),
+                      child: FutureBuilder<double>(
+                          future: entrySum,
+                          builder: (BuildContext context,
+                              AsyncSnapshot<double> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            } else {
+                              final items = snapshot.data ?? <NoteModel>[];
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Padding(padding: EdgeInsets.all(11.0)),
+                                  const Text("Entrada",
+                                      style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color.fromRGBO(0, 0, 0, 0.6))),
+                                  Text("$items Kg",
+                                      style: const TextStyle(
+                                          fontSize: 15,
+                                          color: Color.fromRGBO(0, 0, 0, 0.6),
+                                          fontWeight: FontWeight.bold))
+                                ],
+                              );
+                            }
+                          }),
                     ),
                   ),
                   const Padding(padding: EdgeInsets.all(16.0)),
@@ -109,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)),
                           backgroundColor:
-                          const Color.fromRGBO(69, 161, 134, 1)),
+                              const Color.fromRGBO(69, 161, 134, 1)),
                       onPressed: () => {},
                       child: const Text(
                         "Listagem de Saidas",
@@ -132,11 +151,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)),
                           backgroundColor:
-                          const Color.fromRGBO(69, 161, 134, 1)),
-                      onPressed: () {Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const EntryList()),
-                      );},
+                              const Color.fromRGBO(69, 161, 134, 1)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const EntryList()),
+                        ).then((_) => {_refresh()});
+                      },
                       child: const Text(
                         "Listagem de Entradas",
                         textAlign: TextAlign.center,
@@ -153,7 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5)),
                           backgroundColor:
-                          const Color.fromRGBO(69, 161, 134, 1)),
+                              const Color.fromRGBO(69, 161, 134, 1)),
                       onPressed: () => {},
                       child: const Text(
                         "Listagem de Saidas",

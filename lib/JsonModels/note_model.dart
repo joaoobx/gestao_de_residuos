@@ -2,7 +2,7 @@ class NoteModel {
   final int? noteId;
   final String type;
   final String location;
-  final String weight;
+  final double weight;
   final String createdAt;
 
   NoteModel({

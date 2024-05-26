@@ -149,7 +149,7 @@ class _CreateEntryState extends State<CreateEntry> {
                                       .createNote(NoteModel(
                                       type: type.text,
                                       location: location.text,
-                                      weight: weight.text,
+                                      weight: double.parse(weight.text),
                                       createdAt: DateTime.now().toIso8601String()))
                                       .whenComplete(() {
                                     //When this value is true
