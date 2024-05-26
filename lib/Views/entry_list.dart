@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
-import 'package:gerenciamento_de_residuos/Views/create_note.dart';
+import 'package:gerenciamento_de_residuos/Views/create_entry.dart';
+import 'package:gerenciamento_de_residuos/Views/edit_entry.dart';
 import 'package:intl/intl.dart';
 
 class EntryList extends StatefulWidget {
@@ -67,22 +68,6 @@ class _EntryListState extends State<EntryList> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            //We need call refresh method after a new note is created
-            //Now it works properly
-            //We will do delete now
-            Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const CreateNote()))
-                .then((value) {
-              if (value) {
-                //This will be called
-                _refresh();
-              }
-            });
-          },
-          child: const Icon(Icons.add),
-        ),
         body: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -143,7 +128,7 @@ class _EntryListState extends State<EntryList> {
                                             ),
                                             const Spacer(),
                                             Text(
-                                              items[index].location,
+                                              "${items[index].weight} Kg",
                                               style: const TextStyle(
                                                   color: Color.fromRGBO(
                                                       0, 0, 0, 1)),
@@ -163,7 +148,7 @@ class _EntryListState extends State<EntryList> {
                                             ),
                                             const Spacer(),
                                             Text(
-                                              items[index].weight,
+                                              items[index].location,
                                               style: const TextStyle(
                                                   color: Color.fromRGBO(
                                                       0, 0, 0, 0.6),
@@ -192,7 +177,21 @@ class _EntryListState extends State<EntryList> {
                                                       194, 196, 108, 1),
                                               padding:
                                                   const EdgeInsets.all(0.0)),
-                                          onPressed: () => {},
+                                          onPressed: () {
+                                            //We need call refresh method after a new note is created
+                                            //Now it works properly
+                                            //We will do delete now
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => const EditEntry()))
+                                                .then((value) {
+                                              if (value) {
+                                                //This will be called
+                                                _refresh();
+                                              }
+                                            });
+                                          },
                                           child: const Text(
                                             "Editar",
                                             textAlign: TextAlign.center,
@@ -262,8 +261,10 @@ class _EntryListState extends State<EntryList> {
                       //We need call refresh method after a new note is created
                       //Now it works properly
                       //We will do delete now
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => const CreateNote()))
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const CreateEntry()))
                           .then((value) {
                         if (value) {
                           //This will be called

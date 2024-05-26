@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gerenciamento_de_residuos/JsonModels/note_model.dart';
 import 'package:gerenciamento_de_residuos/SQLite/sqlite.dart';
-import 'package:gerenciamento_de_residuos/Views/create_note.dart';
+import 'package:gerenciamento_de_residuos/Views/create_entry.dart';
 import 'package:intl/intl.dart';
 
 class Notes extends StatefulWidget {
@@ -60,7 +60,7 @@ class _NotesState extends State<Notes> {
             //Now it works properly
             //We will do delete now
             Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const CreateNote()))
+                    MaterialPageRoute(builder: (context) => const CreateEntry()))
                 .then((value) {
               if (value) {
                 //This will be called
